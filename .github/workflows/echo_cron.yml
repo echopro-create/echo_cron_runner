@@ -1,0 +1,29 @@
+name: Echo Cron
+
+on:
+  schedule:
+    # Запуск каждые 10 минут
+    - cron: "*/10 * * * *"
+  # Ручной запуск из интерфейса GitHub
+  workflow_dispatch: {}
+
+jobs:
+  run-echo-cron:
+    runs-on: ubuntu-latest
+
+    env:
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      PROJECT_URL: https://yqapuyjptoastmclhylo.supabase.co
+
+    steps:
+      - name: Trigger Check Delivery
+        run: |
+          set -e
+
+          echo "Calling: $PROJECT_URL/functions/v1/check-delivery"
+
+          curl -sS -f -X POST \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+            -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
+            -H "Content-Type: application/json" \
+            "$PROJECT_URL/functions/v1/check-delivery"
