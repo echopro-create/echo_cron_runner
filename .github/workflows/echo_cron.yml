@@ -27,3 +27,15 @@ jobs:
             -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
             -H "Content-Type: application/json" \
             "$PROJECT_URL/functions/v1/check-delivery"
+
+      - name: Trigger Pulse Check
+        run: |
+          set -e
+
+          echo "Calling: $PROJECT_URL/functions/v1/pulse-check"
+
+          curl -sS -f -X POST \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+            -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
+            -H "Content-Type: application/json" \
+            "$PROJECT_URL/functions/v1/pulse-check"
