@@ -1,0 +1,41 @@
+name: Echo Cron
+
+on:
+  schedule:
+    # Запуск каждые 10 минут
+    - cron: "*/10 * * * *"
+  # Ручной запуск из интерфейса GitHub
+  workflow_dispatch: {}
+
+jobs:
+  run-echo-cron:
+    runs-on: ubuntu-latest
+
+    env:
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      PROJECT_URL: https://yqapuyjptoastmclhylo.supabase.co
+
+    steps:
+      - name: Update Pulse Status
+        run: |
+          set -e
+
+          echo "Calling $PROJECT_URL/functions/v1/check-delivery"
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST "$PROJECT_URL/functions/v1/check-delivery" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+            -H "Content-Type: application/json")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "Response: $BODY"
+          echo "HTTP Code: $HTTP_CODE"
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "Error: HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+          echo "✅ Check delivery completed successfully"
