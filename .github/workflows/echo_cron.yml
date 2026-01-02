@@ -2,8 +2,8 @@ name: Echo Cron
 
 on:
   schedule:
-    # Запуск каждые 10 минут
-    - cron: "*/10 * * * *"
+    # Запуск каждые 5 минут
+    - cron: "*/5 * * * *"
   # Ручной запуск из интерфейса GitHub
   workflow_dispatch: {}
 
@@ -13,7 +13,7 @@ jobs:
 
     env:
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-      PROJECT_URL: https://yqapuyjptoastmclhylo.supabase.co
+      PROJECT_URL: https://epwnrcocvpbxilnupyfh.supabase.co
 
     steps:
       - name: Update Pulse Status
@@ -28,7 +28,7 @@ jobs:
             -H "Content-Type: application/json")
 
           HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
-          BODY=$(echo "$RESPONSE" | sed '$d')
+          BODY=$(echo "$RESPONSE" | sed ["$d"])
 
           echo "Response: $BODY"
           echo "HTTP Code: $HTTP_CODE"
