@@ -1,11 +1,10 @@
 name: Echo Cron
 
 on:
-  push:
-    branches:
-      - main
   schedule:
+    # Запуск каждые 5 минут
     - cron: "*/5 * * * *"
+  # Ручной запуск из интерфейса GitHub
   workflow_dispatch: {}
 
 jobs:
