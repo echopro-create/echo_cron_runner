@@ -2,8 +2,8 @@ name: Echo Cron
 
 on:
   schedule:
-    # Запуск каждые 5 минут
-    - cron: "*/5 * * * *"
+    # Запуск каждый час (Free Tier Friendly)
+    - cron: "0 * * * *"
   # Ручной запуск из интерфейса GitHub
   workflow_dispatch: {}
 
