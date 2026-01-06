@@ -39,3 +39,26 @@ jobs:
           fi
 
           echo "✅ Check delivery completed successfully"
+
+      - name: Run Pulse Guard
+        run: |
+          set -e
+          echo "Calling $PROJECT_URL/functions/v1/pulse-guard"
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST "$PROJECT_URL/functions/v1/pulse-guard" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+            -H "Content-Type: application/json")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "Response: $BODY"
+          echo "HTTP Code: $HTTP_CODE"
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "Error: HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+          echo "✅ Pulse Guard check completed successfully"
